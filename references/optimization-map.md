@@ -30,7 +30,7 @@
 | 3.3 | 利用较短机械行程缩机构 | 某Cv/内件档位能进入较小机构支持的行程范围 | 区分行程长度与开度百分比；继续核对输出力、弹簧、具体行程版本及安装，行程匹配不是机构通过 | — |
 | 3.4 | 产品和任务允许时比较流向 | 改流向有可能改变开启/关闭负荷，且产品允许 | 推力/扭矩、稳定性、泄漏与失效动作；用户排除反向的任务不启用 | 17 |
 
-最低保证供气与缩小收益分别报告。供气不足的候选可保留有条件建议及差额，不标为通过，不改高客户保证值。原报告推力页的待补和后续验证继续按[推力报告后续验证](actuator-force-followup.md)执行。
+最低保证供气与缩小收益分别报告。供气不足的候选可保留有条件建议及差额，不标为通过，不改高客户保证值。原需求获取、机构端点初筛和后续验证按[推力数据与机构预选](actuator-force-followup.md)执行；原生Excel可作为推力来源。
 
 ## 4. 具体配置优化案例：遇到以下情况，可尝试优化
 
@@ -63,7 +63,7 @@
 | [cost-reduction.md](cost-reduction.md) | 第4类的38条具体配置案例、条件、图号和厂家纠正 |
 | [offline-prescreen.md](offline-prescreen.md) | 软件前联合比较Cv、开度、行程与机构 |
 | [calculation.md](calculation.md) | 公式、缺项处理、证据与检查器输入 |
-| [actuator-force-followup.md](actuator-force-followup.md) | 推力页待补和后续真实验证 |
+| [actuator-force-followup.md](actuator-force-followup.md) | Excel/PDF推力来源、机构端点预选和后续真实验证 |
 | [sync.md](sync.md)、运行说明及scripts/ | 版本、分发、工具与检查 |
 
 参考按需读取；具体客户、位号和本轮限制留在任务记录。项目运行说明为references/runtime.md，分发包为runtime/docs/local-presizing.md。
