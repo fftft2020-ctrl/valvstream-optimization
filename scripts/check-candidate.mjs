@@ -2,6 +2,7 @@
 import { readFile } from 'node:fs/promises';
 import { isDeepStrictEqual } from 'node:util';
 import { pathToFileURL } from 'node:url';
+import { reviewActuator } from './actuator-review.mjs';
 
 const number = (x, zero = false) => typeof x === 'number' && Number.isFinite(x) && (zero ? x >= 0 : x > 0);
 const object = x => x && typeof x === 'object' && !Array.isArray(x);
@@ -118,6 +119,18 @@ export function checkCandidate(input) {
   if (sourceValid && unexpected.length) rejected.push('计算工况不在源清单：' + unexpected.join('、'));
   const coverage = { complete: !!sourceValid && coverageValid && !omitted.length && !unexpected.length,
     expected: source.size, provided: names.size, omitted, unexpected };
+  const noiseRequired = [...source].filter(([, flow]) => flow > 0).map(([name]) => name);
+  const noisePredicted = noiseRequired.filter(name => rows.some(r => r.name === name && r.newNoiseDbA !== null));
+  const noiseCoverage = { complete: coverage.complete && noisePredicted.length === noiseRequired.length,
+    expected: noiseRequired.length, predicted: noisePredicted.length,
+    omitted: noiseRequired.filter(name => !noisePredicted.includes(name)) };
+  const velocityRequired = [...source].filter(([, flow]) => flow > 0).map(([name]) => name);
+  const velocityCalculated = velocityRequired.filter(name => rows.some(r => r.name === name && r.velocityMps !== null));
+  const velocityRough = velocityRequired.filter(name => rows.some(r => r.name === name && r.roughVelocityMps !== null));
+  const velocityCoverage = { complete: coverage.complete && velocityCalculated.length === velocityRequired.length,
+    expected: velocityRequired.length, calculated: velocityCalculated.length, rough: velocityRough.length,
+    omitted: velocityRequired.filter(name => !velocityCalculated.includes(name) && !velocityRough.includes(name)),
+    unverified: velocityRough };
   let hydraulicClosingLowerBoundN = null;
   if (input.forceScreen != null) {
     const f = input.forceScreen;
@@ -129,9 +142,14 @@ export function checkCandidate(input) {
       pending.push('关闭力仅与液压力下界比较，密封/摩擦/规定余量及开启方向仍须核验');
     }
   } else pending.push('尚未完成机构静力初筛；不得据 Cv 变化宣称机构可缩小');
+  const actuatorReview=reviewActuator(input.actuatorReview);
+  if (input.actuatorReview!=null) {
+    missing.push(...actuatorReview.missing);
+    for (const c of actuatorReview.comparisons) if(c.candidateVerdict==='INSUFFICIENT') rejected.push(`${c.model}：当前候选需求下机构输出不足`);
+  } else pending.push('未提供机构对照；容量检查状态不能作为机构或优化交付完成');
   return {
-    schemaVersion: 2, status: rejected.length ? 'REJECTED' : missing.length ? 'NEEDS_DATA' : deviations.length ? 'DEVIATION_REVIEW' : 'READY_FOR_SOFTWARE_CHECK',
-    calculationBasis: basisType, coverage, trialPriority: 'NOT_ASSESSED',
+    schemaVersion: 2, actuatorReview, status: rejected.length ? 'REJECTED' : missing.length ? 'NEEDS_DATA' : deviations.length ? 'DEVIATION_REVIEW' : 'READY_FOR_SOFTWARE_CHECK',
+    calculationBasis: basisType, coverage, noiseCoverage, velocityCoverage, trialPriority: 'NOT_ASSESSED',
     liveValidated: false, businessGatePass: false,
     rejected, missing, deviations, pending, cases: rows, hydraulicClosingLowerBoundN
   };

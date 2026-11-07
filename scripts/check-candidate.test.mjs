@@ -173,3 +173,41 @@ test('special design cannot obtain basic-check approval by using an unsupported 
     assert.equal(r.liveValidated, false); assert.equal(r.trialPriority, 'NOT_ASSESSED');
   }
 });
+
+
+test('source coverage is not noise prediction coverage; original report values cannot fill the gap', () => {
+  const x=sample();Object.assign(x.cases[0],{noiseDbA:70,noiseRelation:'<',noiseBasis:'original-report'});
+  let r=checkCandidate(x);assert.equal(r.coverage.complete,true);assert.equal(r.noiseCoverage.complete,false);
+  assert.deepEqual(r.noiseCoverage.omitted,[x.cases[0].name]);
+  x.cases[0].noiseBasis='prediction';r=checkCandidate(x);assert.equal(r.noiseCoverage.complete,true);
+  x.cases[0].noiseDbA=90;x.cases[0].noiseRelation='=';r=checkCandidate(x);
+  assert.equal(r.noiseCoverage.complete,true);assert.equal(r.cases[0].noiseAssessment,'EXCEEDS_LIMIT');
+});
+test('noise coverage retains omitted flowing cases and excludes only zero-flow sources', () => {
+  const x=sample();Object.assign(x.cases[0],{noiseDbA:70,noiseRelation:'=',noiseBasis:'prediction'});
+  x.sourceCases.push({name:'Missing',massFlowKgH:100},{name:'Stopped',massFlowKgH:0});
+  const r=checkCandidate(x);assert.equal(r.noiseCoverage.expected,2);assert.equal(r.noiseCoverage.predicted,1);
+  assert.deepEqual(r.noiseCoverage.omitted,['Missing']);assert.equal(r.noiseCoverage.complete,false);
+});
+
+test('complete source list cannot hide missing candidate velocity', () => {
+  const x=sample();delete x.cases[0].outletDensityKgM3;
+  const r=checkCandidate(x);assert.equal(r.coverage.complete,true);assert.equal(r.rejected.length,0);
+  assert.equal(r.velocityCoverage.complete,false);assert.equal(r.velocityCoverage.calculated,0);
+  assert.deepEqual(r.velocityCoverage.omitted,['Max']);
+});
+test('rough velocity remains unverified and same-Cv rules do not waive flow checks', () => {
+  const x=sample();x.direction='cv';x.candidate.bodyNominalMm=x.baseline.bodyNominalMm;
+  x.cases[0].outletAreaBasis='nominal';x.cases[0].velocityAssumptions='Synthetic nominal outlet diameter';
+  let r=checkCandidate(x);assert.equal(r.velocityCoverage.complete,false);assert.equal(r.velocityCoverage.rough,1);
+  assert.deepEqual(r.velocityCoverage.unverified,['Max']);assert.deepEqual(r.velocityCoverage.omitted,[]);
+  x.cases[0].outletAreaBasis='actual';r=checkCandidate(x);assert.equal(r.velocityCoverage.complete,true);
+  assert.equal(r.velocityCoverage.calculated,1);assert.equal(r.velocityCoverage.rough,0);
+});
+test('velocity coverage retains omitted cases, excludes stopped cases and respects invalid source matching', () => {
+  const x=sample();x.sourceCases.push({name:'Missing',massFlowKgH:100},{name:'Stopped',massFlowKgH:0});
+  let r=checkCandidate(x);assert.equal(r.velocityCoverage.expected,2);assert.equal(r.velocityCoverage.calculated,1);
+  assert.deepEqual(r.velocityCoverage.omitted,['Missing']);assert.equal(r.velocityCoverage.complete,false);
+  const y=sample();y.cases[0].massFlowKgH=100;
+  assert.equal(checkCandidate(y).velocityCoverage.complete,false);
+});
