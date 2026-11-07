@@ -1,0 +1,34 @@
+{
+  "sizing": {
+    "flowUnit": "m3/h",
+    "pressureUnit": "bar g",
+    "temperatureUnit": "deg C",
+    "cases": [
+      { "name": "Min", "flow": 10, "p1": 0.392, "p2": 0.245, "temperature": 140,
+        "properties": { "densityKgM3": 0.33, "k": 1.4, "basis": "合成离线回归：入口工况密度及k；不是客户物性保证" } },
+      { "name": "Norm", "flow": 88, "p1": 0.49, "p2": 0.392, "temperature": 140,
+        "properties": { "densityKgM3": 0.41, "k": 1.4, "basis": "合成离线回归：入口工况密度及k；不是客户物性保证" } },
+      { "name": "Max", "flow": 125, "p1": 0.69, "p2": 0.642, "temperature": 20,
+        "properties": { "densityKgM3": 0.81, "k": 1.4, "basis": "合成离线回归：入口工况密度及k；不是客户物性保证" } }
+    ]
+  },
+  "preSizing": {
+    "phase": "gas",
+    "singlePhase": true,
+    "turbulent": true,
+    "assessmentBasis": "演示假设，仅用于离线算例；现场须独立确认单相和公式适用性",
+    "atmosphereBar": 1.01325,
+    "factors": {
+      "fp": { "value": 1, "basis": "演示等管径、无附件修正假设" },
+      "xt": { "values": [0.5, 0.7, 0.8], "basis": "敏感性假设，不代表厂家已确认xT" }
+    },
+    "candidateFilter": {
+      "series": "21000",
+      "size": "2",
+      "characteristic": "equal-percentage",
+      "flowDirection": "FTO"
+    },
+    "preferredTravelPercent": [10, 85],
+    "travelWindowBasis": "演示筛选偏好，不是通用合格阈值"
+  }
+}

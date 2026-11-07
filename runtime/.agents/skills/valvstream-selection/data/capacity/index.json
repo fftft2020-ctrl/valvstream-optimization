@@ -1,0 +1,361 @@
+{
+  "schemaVersion": 1,
+  "sourceManifestSha256": "876b0395765b087c7c4244218d75f39d527932080e2373cb8cb2367622c24606",
+  "extractorSha256": "c681d30721587a6a20fcedb0582df736544a94300b85568e805c550f1517acd9",
+  "sources": [
+    {
+      "filename": "MN-Valve-Sizing-Handbook-GEA19540A-English.pdf",
+      "path": ".agents/skills/valvstream-selection/references/source-pdfs/MN-Valve-Sizing-Handbook-GEA19540A-English.pdf",
+      "bytes": 2375943,
+      "sha256": "2e8fc6f061f8910cff3e0472cfc0e85560cd06a552cf03606312ab493fff1da0",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-10000-Double-Ported-Globe-Valve-Tech-Spec-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-10000-Double-Ported-Globe-Valve-Tech-Spec-English.pdf",
+      "bytes": 1059567,
+      "sha256": "efcbb11bfd2aa6f5940f2af714de33fa369b2736e80c1d03f29ef39e51e618fc",
+      "role": "capacity-data"
+    },
+    {
+      "filename": "Masoneilan-21000-Globe-Valve-Fact-Sheet-English.pdf",
+      "path": ".agents/skills/valvstream-selection/references/source-pdfs/Masoneilan-21000-Globe-Valve-Fact-Sheet-English.pdf",
+      "bytes": 693779,
+      "sha256": "d9057f637565a90273f2f215106362f99d86bb6014ed72e68dd442306aded0ce",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-21000-Globe-Valve-Manual-English.pdf",
+      "path": ".agents/skills/valvstream-selection/references/source-pdfs/Masoneilan-21000-Globe-Valve-Manual-English.pdf",
+      "bytes": 5567010,
+      "sha256": "dfb92fcd7ca7a6f29131e9dc006fa09168610e58671e98495d97b1df04877421",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-21000-Globe-Valve-Tech-Spec-English.pdf",
+      "path": ".agents/skills/valvstream-selection/references/source-pdfs/Masoneilan-21000-Globe-Valve-Tech-Spec-English.pdf",
+      "bytes": 3700181,
+      "sha256": "359427945ac851a1a891aafc3454e0375272fe840957570bd9b87245d0aaa2e4",
+      "role": "capacity-data"
+    },
+    {
+      "filename": "Masoneilan-21000-Series-Brochure-English.pdf",
+      "path": ".agents/skills/valvstream-selection/references/source-pdfs/Masoneilan-21000-Series-Brochure-English.pdf",
+      "bytes": 585881,
+      "sha256": "ea9aa0a0ba1747bc590d95cb7a679f261242d55550edf6febfcd453802bb9cb6",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-28000-Varipak-Tech-Spec-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-28000-Varipak-Tech-Spec-English.pdf",
+      "bytes": 5617168,
+      "sha256": "ed5277da6eefe8b3d7ebf9fcbd128b7ed39ba8f2f0af892cc346877ea1d83ed5",
+      "role": "rated-capacity-only"
+    },
+    {
+      "filename": "Masoneilan-33000-Triple-Offset-Butterfly-Manual-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-33000-Triple-Offset-Butterfly-Manual-English.pdf",
+      "bytes": 6243245,
+      "sha256": "e3e808713297049ae07f5fdf648c00f1dcc8be6d1d1269f24d8c2a3a47dfecb6",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-33000-Triple-Offset-Butterfly-Tech-Spec-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-33000-Triple-Offset-Butterfly-Tech-Spec-English.pdf",
+      "bytes": 3494564,
+      "sha256": "b6c102b9951bd97a5a779c2d63581bd149cf31ae67832a439c46ab7041648cd3",
+      "role": "capacity-data"
+    },
+    {
+      "filename": "Masoneilan-35002-Camflex-Fact-Sheet-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-35002-Camflex-Fact-Sheet-English.pdf",
+      "bytes": 167013,
+      "sha256": "d98791aa69a72b1b7a7b11a2280d386b9c54901dcb1661977d5d004bf208c480",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-35002-Camflex-High-Capacity-and-5S-Actuator-Fact-Sheet-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-35002-Camflex-High-Capacity-and-5S-Actuator-Fact-Sheet-English.pdf",
+      "bytes": 167013,
+      "sha256": "d98791aa69a72b1b7a7b11a2280d386b9c54901dcb1661977d5d004bf208c480",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-35002-Camflex-II-Brochure-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-35002-Camflex-II-Brochure-English.pdf",
+      "bytes": 593074,
+      "sha256": "0967f9c869454d782ff517b086b6f379df22c6b105edd46001fd8d91abf74359",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-35002-Camflex-II-Tech-Spec-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-35002-Camflex-II-Tech-Spec-English.pdf",
+      "bytes": 2803366,
+      "sha256": "1a20d0e3ccefead75f3ceb9896332b13b016cac06fb8987f173d4303557ceffc",
+      "role": "capacity-data"
+    },
+    {
+      "filename": "Masoneilan-35002-Camflex-Manual-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-35002-Camflex-Manual-English.pdf",
+      "bytes": 2900220,
+      "sha256": "f5fec5aa7c9e45a4cbe88e75de5337793a5a6e6b04fa08b8c72351d3acace31f",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-41005-Globe-Valve-Tech-Spec-English.pdf",
+      "path": ".agents/skills/valvstream-selection/references/source-pdfs/Masoneilan-41005-Globe-Valve-Tech-Spec-English.pdf",
+      "bytes": 4688189,
+      "sha256": "36e3d829f6efa5914b37ddcf200fe29b00b5bea70d4a4236cbdb6e5c2dbac080",
+      "role": "capacity-data"
+    },
+    {
+      "filename": "Masoneilan-41005-Series-Brochure-English.pdf",
+      "path": ".agents/skills/valvstream-selection/references/source-pdfs/Masoneilan-41005-Series-Brochure-English.pdf",
+      "bytes": 1365216,
+      "sha256": "bf6361f15151f31049c1f43c8dda853068c189041c85a012cff07beca5df7f01",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-41005-Series-IOM-English.pdf",
+      "path": ".agents/skills/valvstream-selection/references/source-pdfs/Masoneilan-41005-Series-IOM-English.pdf",
+      "bytes": 3289324,
+      "sha256": "3a568b9120ea538617d7a17cd83d6a12b80159a68fdaef48e8057e8970dda6b0",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-4700-4800-Pneumatic-Positioner-IOM-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-4700-4800-Pneumatic-Positioner-IOM-English.pdf",
+      "bytes": 5244771,
+      "sha256": "3de920cd27335db6149f87bb40ba2cc2794076b19c6b224fa4bff6ce138d5d5c",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-496-Series-LV-Manual-English.pdf",
+      "path": ".agents/skills/valvstream-selection/references/source-pdfs/Masoneilan-496-Series-LV-Manual-English.pdf",
+      "bytes": 2164569,
+      "sha256": "9332b5100b7fcde85ba0af0eb0e0f8a2f032019d35bb2916f494e771167a5678",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-496-Series-Tech-Spec-English.pdf",
+      "path": ".agents/skills/valvstream-selection/references/source-pdfs/Masoneilan-496-Series-Tech-Spec-English.pdf",
+      "bytes": 1485065,
+      "sha256": "032a04f99a0f7c6e8ea093fb43f078171eb4d710107ba413ba68b552d85419c6",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-51-52-53-Actuator-Manual-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-51-52-53-Actuator-Manual-English.pdf",
+      "bytes": 1411418,
+      "sha256": "cb4775f8d0631c0178dff84f9d88ac8ad1e9431c6f095407ecf55bd432c396b1",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-51-52-53-Actuator-Tech-Spec-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-51-52-53-Actuator-Tech-Spec-English.pdf",
+      "bytes": 5062263,
+      "sha256": "26023567a17fb28ee88b4482564962ca83e06ecc08e19f7923ddb2b4d0b84b2e",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-78-Air-Filter-Manual-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-78-Air-Filter-Manual-English.pdf",
+      "bytes": 1383790,
+      "sha256": "af3012d60e1326a894295698cc4524b068c9235c7305c04151640a7bb3e4a3a2",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-78-Air-Filter-Tech-Spec-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-78-Air-Filter-Tech-Spec-English.pdf",
+      "bytes": 513868,
+      "sha256": "d87b68647f9de508d8e0947eba264182ab5f50d6bb4bb71817ab64316823d951",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-80000-3-Way-Valve-Manual-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-80000-3-Way-Valve-Manual-English.pdf",
+      "bytes": 1251752,
+      "sha256": "4f17b3160da3d2e333f339c2933a7e2986ca50da6ce75150e27816664366cea4",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-80000-3-Way-Valve-Tech-Spec-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-80000-3-Way-Valve-Tech-Spec-English.pdf",
+      "bytes": 1106094,
+      "sha256": "8547487dc99e7e2388a2ae9d777136bbe703ddd21ddcf287dafd567ff5533b06",
+      "role": "capacity-data"
+    },
+    {
+      "filename": "Masoneilan-87-88-Actuator-Manual-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-87-88-Actuator-Manual-English.pdf",
+      "bytes": 3275000,
+      "sha256": "a0cf1349bdfb9d8d4e3ddccfd7b2570007ced50f9a07673ec4f71f640199ccf5",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-87-88-Actuator-Tech-Spec-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-87-88-Actuator-Tech-Spec-English.pdf",
+      "bytes": 3176705,
+      "sha256": "eb8a21b4acc5a926a75afcf33d92d3cc08b452cfbc2243ccbf8eb05cefe9e263",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-SVI3-Digital-Valve-Positioner-Fact-Sheet-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-SVI3-Digital-Valve-Positioner-Fact-Sheet-English.pdf",
+      "bytes": 4582104,
+      "sha256": "21bd9e3640b0d30236a5471607e190e054d4f64223a230ad08605897acc9c862",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-SVI3-Positioner-Manual-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-SVI3-Positioner-Manual-English.pdf",
+      "bytes": 6911785,
+      "sha256": "245c5176c8bc3ccc48719dd1fc624dd75a131b44ceb50acf103aee932ee04078",
+      "role": "supporting-reference"
+    },
+    {
+      "filename": "Masoneilan-SVI3-Quick-Start-Guide-English.pdf",
+      "path": "product_knowledge/bakerhughes/raw_samples/Masoneilan-SVI3-Quick-Start-Guide-English.pdf",
+      "bytes": 2004582,
+      "sha256": "316593d2925f757989f80a200d83c0363166eb66d04e59f3119727a5d3cebf53",
+      "role": "supporting-reference"
+    }
+  ],
+  "series": {
+    "10000": {
+      "tables": 2,
+      "curves": 39,
+      "reviewedPdfPages": [
+        5,
+        6
+      ],
+      "file": "10000.json",
+      "sha256": "151684c5ce5d3975409c56a216da69418ba88e09eb1f5c309cbaf6c54d0dc5e2",
+      "sourceSha256": "efcbb11bfd2aa6f5940f2af714de33fa369b2736e80c1d03f29ef39e51e618fc",
+      "limitations": [
+        "FL存在全孔/缩孔两套值，未自动指定面积类别。"
+      ]
+    },
+    "21000": {
+      "tables": 22,
+      "curves": 734,
+      "reviewedPdfPages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        45
+      ],
+      "file": "21000.json",
+      "sha256": "fee119f38e5819d23fd3e2d99f44498713f674d4828b8777dce577d441edba90",
+      "sourceSha256": "359427945ac851a1a891aafc3454e0375272fe840957570bd9b87245d0aaa2e4",
+      "limitations": [
+        "21614/21615的绿色适用范围未编码；软阀座型号须回查，不能仅凭曲线推荐。"
+      ]
+    },
+    "28000": {
+      "tables": 0,
+      "curves": 0,
+      "reviewedPdfPages": [
+        3
+      ],
+      "file": "28000.json",
+      "sha256": "9e5a36fac3bc0ed63c08d439d84996d9667508b6b4867eb6e873c5c3a54210c8",
+      "sourceSha256": "ed5277da6eefe8b3d7ebf9fcbd128b7ed39ba8f2f0af892cc346877ea1d83ed5",
+      "limitations": [
+        "第3页为额定容量调整设置，不是开度曲线；本手册未给出逐开度Cv表，不生成虚构曲线。尺寸/连接适用性查第3–5页。"
+      ]
+    },
+    "33000": {
+      "tables": 6,
+      "curves": 80,
+      "reviewedPdfPages": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "file": "33000.json",
+      "sha256": "66d6b4550f6d946e7d0b80c2ee6368bba34fab69b52a7675fc9a8ea246d34ee5",
+      "sourceSha256": "b6c102b9951bd97a5a779c2d63581bd149cf31ae67832a439c46ab7041648cd3",
+      "limitations": []
+    },
+    "35002": {
+      "tables": 5,
+      "curves": 89,
+      "reviewedPdfPages": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "file": "35002.json",
+      "sha256": "2875d057f23eb39ff6d8611209d4e509868b788e92ffc2b6f263431233f0eee2",
+      "sourceSha256": "1a20d0e3ccefead75f3ceb9896332b13b016cac06fb8987f173d4303557ceffc",
+      "limitations": [
+        "PDF页序号比印刷页码大1；FL存在全孔/缩孔两套值，未自动指定面积类别。"
+      ]
+    },
+    "41005": {
+      "tables": 20,
+      "curves": 452,
+      "reviewedPdfPages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        47,
+        48
+      ],
+      "file": "41005.json",
+      "sha256": "6bb7d93c0072853c895f3f45686f507dfab9e96aec94694ad5e10f8d0e2be78f",
+      "sourceSha256": "36e3d829f6efa5914b37ddcf200fe29b00b5bea70d4a4236cbdb6e5c2dbac080",
+      "limitations": []
+    },
+    "80000": {
+      "tables": 1,
+      "curves": 10,
+      "reviewedPdfPages": [
+        7
+      ],
+      "file": "80000.json",
+      "sha256": "4a81a7d96f39a1f99b337fd7ef1af7c27936be1026ba388d8aeeebcc7880e291",
+      "sourceSha256": "8547487dc99e7e2388a2ae9d777136bbe703ddd21ddcf287dafd567ff5533b06",
+      "limitations": [
+        "三通阀仅提供单条容量曲线反查，混合/分流及各端口压差须单独核对。"
+      ]
+    }
+  },
+  "interpretation": "厂家容量数据供离线预选；未验证实时软件等价性，不签发业务Gate。页码均为PDF页序号。",
+  "rebuild": "python3 tools/valvstream/knowledge/extract-capacity-tables.py"
+}
