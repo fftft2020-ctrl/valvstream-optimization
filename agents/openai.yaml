@@ -1,4 +1,4 @@
 interface:
   display_name: "阀门选型优化"
-  short_description: "软件前模拟筛选优化方向，联合比较Cv、开度、行程及机构潜力，交付少量有据候选"
-  default_prompt: "使用 $valvstream-optimization 先读取软件前离线预选方法，核对完整阀门数据，保留原配置约束，通过容量、开度、行程和有据机构负荷比较优化方向，交付逐台候选及收益与代价，再按需要和授权复核少量方案。"
+  short_description: "离线计算筛选优化方向，联合比较Cv、开度、行程及机构潜力，交付少量有据候选"
+  default_prompt: "使用 $valvstream-optimization 先读取软件前离线预选方法，核对完整阀门数据，保留原配置约束，通过容量、开度、行程和有据机构负荷比较优化方向，交付逐台候选及收益与代价，并列明剩余核验事项；不进入ValvStream进行线上选型。"
