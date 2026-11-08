@@ -53,3 +53,47 @@ test('candidate checker exposes missing actuator work and rejects only relevant 
  delete x.actuatorReview.candidateDemand;r=checkCandidate(x);assert.equal(r.status,'NEEDS_DATA');assert.equal(r.rejected.length,0);
  x.actuatorReview.loadChanged=false;r=checkCandidate(x);assert.equal(r.status,'REJECTED');
 });
+const boundSample=()=>{
+ const x=sample();delete x.candidateDemand;delete x.geometry.hydraulic;
+ x.geometry.missingNetAreaEvidence=['synthetic drawing lacks balance/seal dimensions; assess unchanged-load premise'];
+ const premises=()=>Object.fromEntries(['operatingConditions','pressureForces','sealingFriction','flowAndTravel'].map(k=>[k,{status:k==='operatingConditions'?'verified':'assumed',basis:'synthetic comparison: same operating envelope; unchanged force components require confirmation'}]));
+ x.baselineBound={open:premises(),close:premises()};return x;
+};
+test('conditional old-demand bound gives directional margins without inventing a new total',()=>{
+ const x=boundSample();x.capacities[0].closeN=12500;
+ const r=reviewActuator(x),c=r.comparisons[0];
+ assert.equal(r.newLoadComplete,false);assert.equal(c.candidateDemandComparison,null);
+ assert.equal(c.candidateVerdict,'CONDITIONAL_BASELINE_COMPARISON');
+ assert.equal(c.conditionalBaselineComparison.close.upperBoundN,12000);
+ assert.equal(c.conditionalBaselineComparison.close.marginN,500);
+ assert.equal(c.conditionalBaselineComparison.close.status,'CONDITIONAL_MARGIN');
+ assert.equal(c.conditionalBaselineComparison.close.unverifiedPremises.length,3);
+});
+test('failure to cover an upper bound asks for a reduction, not rejection of the new configuration',()=>{
+ const x=boundSample(),c=reviewActuator(x).comparisons[0].conditionalBaselineComparison;
+ assert.equal(c.close.status,'REDUCTION_REQUIRED');assert.equal(c.close.minimumReductionN,3000);
+ const input=JSON.parse(readFileSync(new URL('./fixtures/candidate.json',import.meta.url)));
+ input.actuatorReview=x;const r=checkCandidate(input);
+ assert.equal(r.status,'NEEDS_DATA');assert.equal(r.rejected.length,0);
+});
+test('increase in one direction blocks only that directional bound',()=>{
+ const x=boundSample();x.baselineBound.open.pressureForces.status='increases';
+ let c=reviewActuator(x).comparisons[0].conditionalBaselineComparison;
+ assert.equal(c.open.status,'BASELINE_BOUND_NOT_APPLICABLE');assert.equal(c.close.status,'REDUCTION_REQUIRED');
+ x.baselineBound.open.pressureForces.status='assumed';x.geometry.hydraulic=sample().geometry.hydraulic;
+ c=reviewActuator(x).comparisons[0].conditionalBaselineComparison;
+ assert.equal(c.open.status,'CONDITIONAL_MARGIN');assert.equal(c.close.status,'BASELINE_BOUND_NOT_APPLICABLE');
+});
+test('Cv or travel alone and undecided factor basis do not establish a conditional bound',()=>{
+ const x=boundSample();x.baselineBound.open={cvReduced:true,strokeShortened:true};
+ assert.equal(reviewActuator(x).comparisons[0].conditionalBaselineComparison.open.status,'PREMISES_REQUIRED');
+ x.baselineDemand.safetyFactorInclusion='unknown';
+ assert.equal(reviewActuator(x).comparisons[0].conditionalBaselineComparison.close.status,'FACTOR_BASIS_REQUIRED');
+});
+test('conditional bounds count an excluded factor once and prefer an actual new demand',()=>{
+ const x=boundSample();x.baselineDemand.safetyFactorInclusion='excluded';
+ let c=reviewActuator(x).comparisons[0];assert.equal(c.conditionalBaselineComparison.close.upperBoundN,14400);
+ assert.equal(c.conditionalBaselineComparison.close.minimumReductionN,5400);
+ x.candidateDemand=sample().candidateDemand;c=reviewActuator(x).comparisons[0];
+ assert.equal(c.conditionalBaselineComparison,null);assert.equal(c.candidateVerdict,'MARGIN');
+});

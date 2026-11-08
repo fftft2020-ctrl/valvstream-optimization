@@ -1,0 +1,14 @@
+{
+  "review": "v0.4.38：按用户新指示将独立仓库分发改为私有；工程规则与执行机构参数沿用v0.4.37，精简指南无需增加发布流程。",
+  "sources": {
+    "SKILL.md": "dd28d3eeb7c00c7f0dabdd2cceb55fb8b455b71b17eaf3ebfeaf517afa99fecf",
+    "references/chat-attachment.md": "e267cbe2bce5c9cc0fd9251fb6bc56d2bd9ff54260a8ada7446aa3dbafd8aa81",
+    "references/optimization-map.md": "5eea3ae8808beab89cc4119e85c9d69913b7e9bc138f038e7985988214439dbb",
+    "references/cost-reduction.md": "740b9e3a2b1de707c0882fc3d662d26d3a5cf06323e5c34c06de139826af211a",
+    "references/offline-prescreen.md": "ca5496c67f840c28076dd5c46e00df3d239cc7fc2a2c4123618414aafb662e87",
+    "references/calculation.md": "17f42db0bda6b11d96daf7399f543487c25a5c376906bcea24b7be6e7ef9c080",
+    "references/actuator-force-followup.md": "2e0bef9ec07a91bec8b9c20964a8bda9b5b3f8f5cc16497541f7a1c2d8bf6987",
+    "references/getting-started.md": "f3e7e51c5e0a0838f3dddbcdeb553cd125643590475a90d35d5d6667d69c69bb",
+    "references/excel-format.md": "9000e97285345cec04fdfcedc524af8cb4fafddfa14b70fc685611c2d7641071"
+  }
+}

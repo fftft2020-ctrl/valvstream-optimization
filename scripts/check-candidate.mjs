@@ -18,7 +18,7 @@ function compareNoise(value, relation, limit, limitRelation) {
 // Bounded engineering checks only; source truth, model applicability and trial value require separate review.
 export function checkCandidate(input) {
   const rejected = [], missing = [], deviations = [], pending = [
-    '软件核验实际候选、完整机构负荷、附件与动作时间；本结果不等于选型通过',
+    '软件核验实际候选、完整执行机构负荷、附件与动作时间；本结果不等于选型通过',
     '本地引擎未实现完整异径管修正、黏度修正及气蚀损伤模型',
     '逐路线比较收益、原噪声、速度增量、开度和余量后再安排试选；检查状态不决定优先级'
   ];
@@ -141,12 +141,12 @@ export function checkCandidate(input) {
       else if (f.availableClosingN <= hydraulicClosingLowerBoundN) rejected.push('关闭可用力不足以覆盖液压力及其他负荷');
       pending.push('关闭力仅与液压力下界比较，密封/摩擦/规定余量及开启方向仍须核验');
     }
-  } else pending.push('尚未完成机构静力初筛；不得据 Cv 变化宣称机构可缩小');
+  } else pending.push('尚未完成执行机构静力初筛；不得据 Cv 变化宣称执行机构可缩小');
   const actuatorReview=reviewActuator(input.actuatorReview);
   if (input.actuatorReview!=null) {
     missing.push(...actuatorReview.missing);
-    for (const c of actuatorReview.comparisons) if(c.candidateVerdict==='INSUFFICIENT') rejected.push(`${c.model}：当前候选需求下机构输出不足`);
-  } else pending.push('未提供机构对照；容量检查状态不能作为机构或优化交付完成');
+    for (const c of actuatorReview.comparisons) if(c.candidateVerdict==='INSUFFICIENT') rejected.push(`${c.model}：当前候选需求下执行机构输出不足`);
+  } else pending.push('未提供执行机构对照；容量检查状态不能作为执行机构或优化交付完成');
   return {
     schemaVersion: 2, actuatorReview, status: rejected.length ? 'REJECTED' : missing.length ? 'NEEDS_DATA' : deviations.length ? 'DEVIATION_REVIEW' : 'READY_FOR_SOFTWARE_CHECK',
     calculationBasis: basisType, coverage, noiseCoverage, velocityCoverage, trialPriority: 'NOT_ASSESSED',

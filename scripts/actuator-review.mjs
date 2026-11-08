@@ -22,11 +22,35 @@ function compare(demand, output) {
     : !included?'INSUFFICIENT':excluded?'MARGIN_WITH_UNKNOWN_FACTOR_BASIS':'FACTOR_BASIS_REQUIRED';
   return {margins,verdict};
 }
+// These are declared directional premises, not a computed new load or verified source.
+function conditionalBaselineComparison(demand, oldComparison, bound, hydraulicChangeN) {
+  if (!obj(bound)) return null;
+  const checks=['operatingConditions','pressureForces','sealingFriction','flowAndTravel'];
+  return Object.fromEntries(['open','close'].map(direction=>{
+    const premises=bound[direction];
+    if (!['included','excluded'].includes(demand.safetyFactorInclusion))
+      return [direction,{status:'FACTOR_BASIS_REQUIRED'}];
+    if (!obj(premises)||!checks.every(k=>obj(premises[k])
+      &&['verified','assumed','increases'].includes(premises[k].status)&&text(premises[k].basis)))
+      return [direction,{status:'PREMISES_REQUIRED'}];
+    if (checks.some(k=>premises[k].status==='increases') || hydraulicChangeN?.[direction]>0)
+      return [direction,{status:'BASELINE_BOUND_NOT_APPLICABLE',premises,
+        reason:'存在增力项，先核算抵消量或新的上限；不能假定新总需求不增加'}];
+    const m=oldComparison.margins[direction];
+    const included=demand.safetyFactorInclusion==='included';
+    const upperBoundN=included?m.includedThresholdN:m.excludedThresholdN;
+    const marginN=included?m.marginIfIncludedN:m.marginIfExcludedN;
+    return [direction,{status:marginN>=0?'CONDITIONAL_MARGIN':'REDUCTION_REQUIRED',
+      upperBoundN,marginN,minimumReductionN:Math.max(0,-marginN),premises,
+      unverifiedPremises:checks.filter(k=>premises[k].status==='assumed'),
+      basis:'原需求作为有条件上限；不是新负荷预测，输出适用性和损失仍须核对'}];
+  }));
+}
 export function reviewActuator(input) {
   const missing=[], pending=['输出余量不等于完整合格；仍核对全行程、气路损失、安装、阀杆和动作要求'];
   const result={comparisonComplete:false,newLoadComplete:false,geometryChecked:false,throatAreaChangeMm2:null,
     hydraulicChangeN:null,comparisons:[],missing,pending,liveValidated:false};
-  if (!obj(input)) {missing.push('缺机构需求、候选能力和改Cv后的负荷检查');return result;}
+  if (!obj(input)) {missing.push('缺执行机构需求、候选能力和改Cv后的负荷检查');return result;}
   const {baselineDemand,candidateDemand,geometry,capacities,loadChanged,minimumSupplyMPa}=input;
   if (!validDemand(baselineDemand)) missing.push('原开启/关闭需求、单位N、安全系数包含关系和来源须完整');
   if (typeof loadChanged!=='boolean') missing.push('须明确阀门配置是否改变');
@@ -54,11 +78,11 @@ export function reviewActuator(input) {
       }
       pending.push(change===0?'本档目录喉径未变，不能宣称喉径缩小带来减力':'喉径变化已量化；圆面积变化不等于净受压面积或总推力降幅');
     }
-    if (!validDemand(candidateDemand)) missing.push('新总需求未完成；保留已算液压力分量，不将旧负荷不足当成新方案失败');
+    if (!validDemand(candidateDemand)) missing.push('新总需求未完成；保留已算分量，并评估原需求作为有条件上限；旧负荷不足不等于新方案失败');
   }
   const newDemand=loadChanged===false ? baselineDemand : candidateDemand;
   result.newLoadComplete=validDemand(newDemand);
-  if (!Array.isArray(capacities)||!capacities.length) missing.push('须列出具体候选机构能力，不能只写待核型号');
+  if (!Array.isArray(capacities)||!capacities.length) missing.push('须列出具体候选执行机构能力，不能只写待核型号');
   for (const output of Array.isArray(capacities)?capacities:[]) {
     if (!obj(output)||!text(output.model)||!text(output.source)||!text(output.outputBasis)
       || !['openN','closeN'].every(k=>finite(output[k])&&output[k]>=0)
@@ -68,10 +92,13 @@ export function reviewActuator(input) {
     const old=validDemand(baselineDemand)?compare(baselineDemand,output):null;
     const current=result.newLoadComplete?compare(newDemand,output):null;
     if (validDemand(baselineDemand)&&!old || result.newLoadComplete&&!current) missing.push('需求门槛或余量计算溢出');
+    const conditional=loadChanged===true&&!current&&old
+      ?conditionalBaselineComparison(baselineDemand,old,input.baselineBound,result.hydraulicChangeN):null;
+    const hasConditional=conditional&&Object.values(conditional).some(c=>finite(c.marginN));
     result.comparisons.push({model:output.model,availableOpenN:output.openN,availableCloseN:output.closeN,
       supplyMPa:output.supplyMPa,outputBasis:output.outputBasis,source:output.source,
-      baselineDemandComparison:old,candidateDemandComparison:current,
-      candidateVerdict:current?.verdict??'NEW_LOAD_NOT_CALCULATED'});
+      baselineDemandComparison:old,candidateDemandComparison:current,conditionalBaselineComparison:conditional,
+      candidateVerdict:current?.verdict??(hasConditional?'CONDITIONAL_BASELINE_COMPARISON':'NEW_LOAD_NOT_CALCULATED')});
   }
   result.comparisonComplete=validDemand(baselineDemand)&&result.comparisons.length>0
     &&result.comparisons.length===capacities?.length&&result.comparisons.every(r=>r.baselineDemandComparison!==null);
