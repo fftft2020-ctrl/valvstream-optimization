@@ -25,6 +25,11 @@ class ChatExportTests(unittest.TestCase):
         for row in re.findall(r'^\|.*$', layout, re.M):
             self.assertIn(row, text)
         self.assertIn('无法判定：缺新总需求', text)
+        self.assertIn('恰好2张可见工作表', text)
+        self.assertIn('**优化汇总、计算过程**', text)
+        self.assertIn('各工况需求Cv', text)
+        self.assertIn('返回汇总', text)
+        self.assertNotIn('固定三表', text)
         self.assertEqual(module.build(HERE.parent), text)
 
 if __name__ == '__main__':
