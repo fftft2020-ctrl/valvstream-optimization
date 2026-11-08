@@ -21,6 +21,10 @@ class ChatExportTests(unittest.TestCase):
             self.assertNotIn(forbidden, text)
         for target in re.findall(r'\]\(([^)]+)\)', text):
             self.assertRegex(target, r'^(https?://|#)')
+        layout = (HERE.parent / 'references/excel-format.md').read_text()
+        for row in re.findall(r'^\|.*$', layout, re.M):
+            self.assertIn(row, text)
+        self.assertIn('无法判定：缺新总需求', text)
         self.assertEqual(module.build(HERE.parent), text)
 
 if __name__ == '__main__':

@@ -15,6 +15,7 @@ SECTIONS = (
     ('references/calculation.md', 'calculation', '计算、流速与噪声的适用边界'),
     ('references/actuator-force-followup.md', 'actuator', '推力对照与改Cv后的负荷计算'),
     ('references/getting-started.md', 'delivery', '中文逐台交付规范'),
+    ('references/excel-format.md', 'excel-format', '固定三张Excel工作表及机构核算'),
 )
 
 def between(text, start, end=None):
