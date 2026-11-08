@@ -30,6 +30,9 @@ class ChatExportTests(unittest.TestCase):
         self.assertIn('各工况需求Cv', text)
         self.assertIn('返回汇总', text)
         self.assertNotIn('固定三表', text)
+        for phrase in ['如何判定需求是否已含安全系数', '不能单独证明不含系数', '原系数→1.0→原系数', '不在正式两表反复铺开']:
+            self.assertIn(phrase, text)
+        self.assertNotIn('每方向明确分“已含／未含”两行', text)
         self.assertEqual(module.build(HERE.parent), text)
 
 if __name__ == '__main__':
