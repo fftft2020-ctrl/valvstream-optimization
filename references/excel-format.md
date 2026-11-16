@@ -97,6 +97,6 @@ node scripts/export-report.mjs result.json report-plan.json report.xlsx previews
 - capacity方案的`originalCases`按结果sourceCases的全部原工况及顺序提供name、flowValue/flowUnit、p1/p2/pressureUnit、temperatureC、originalRequiredCv、originalOpeningPercent、originalOutletVelocityMps；缺项写具体待核说明，不能用0代替。新CV、开度和出口流速直接读取计算记录，计划不能覆盖；原值和单位仍须与提取的原数据核对。其他范围不重复工况。
 - capacity/actuator方案须给`selectedActuator:{type,size,travelIn,spring}`，精确绑定本轮组合；计算输入已有actuation.selection时不得在排版中换组合。执行机构、行程和弹簧与选中记录核对，有变化而计划未列时自动补入；原/新需求、输出力及简短算式由结果生成；新需求缺失显示待核。用户明确授权新需求不增时，给`demandAssumption:{kind:"not-increased",source:"本任务明确授权及范围"}`，仅显示假设上限，不改计算资格。仅阀盖方案不提供这些字段。
 
-可复用合成示例见`scripts/fixtures/report.mjs`，用于验证未知新需求、三工况不同温度、仅阀盖和缩执行机构的显示；示例客户条件不得复制到真实任务。其余特殊结构或旋转力矩缺适用计算时保留待核，不套直行程推力算法。
+可复用合成示例见`fixtures/report.mjs`，用于验证未知新需求、三工况不同温度、仅阀盖和缩执行机构的显示；示例客户条件不得复制到真实任务。其余特殊结构或旋转力矩缺适用计算时保留待核，不套直行程推力算法。
 
 生成后的.audit.json保留本地，用于逐格核对和重建，不添加到用户Excel。实际查看三表、确认行高、单位和内部跳转后再交付；内部链接写为原生location，不用普通文字或没有目标的按钮。

@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import { createHash, randomUUID } from "node:crypto";
+import { existsSync } from "node:fs";
 import { readFile, mkdir, writeFile, link, unlink } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { calculatePreSizing, screenHistoricalCandidates, matchHistoricalFilter, catalogSizeMatches, PreSizingError } from "./pre-sizing.mjs";
 
-const ROOT = fileURLToPath(new URL("../../", import.meta.url));
-const DATA = join(ROOT, ".agents/skills/valvstream-selection/data/capacity");
+const DATA = fileURLToPath(new URL(existsSync(new URL('../capacity/index.json', import.meta.url))
+  ? '../capacity/' : '../../.agents/skills/valvstream-selection/data/capacity/', import.meta.url));
 export const digest = value => createHash("sha256").update(typeof value === "string" || Buffer.isBuffer(value) ? value : stable(value)).digest("hex");
 function stable(value) {
   if (value === null || typeof value !== "object") return JSON.stringify(value);

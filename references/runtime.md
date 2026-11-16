@@ -9,9 +9,9 @@
 从Skill根运行：
 
 ```bash
-node runtime/tools/valvstream/pre-sizing-cli.mjs inventory
-node runtime/tools/valvstream/pre-sizing-cli.mjs catalog filter.json
-node runtime/tools/valvstream/pre-sizing-cli.mjs calculate runtime/tools/valvstream/fixtures/synthetic/pre-sizing-gas.json --out-dir scratch/demo --cache-dir scratch/cache
+node runtime/pre-sizing-cli.mjs inventory
+node runtime/pre-sizing-cli.mjs catalog filter.json
+node runtime/pre-sizing-cli.mjs calculate fixtures/pre-sizing-gas.json --out-dir scratch/demo --cache-dir scratch/cache
 ```
 
 filter.json示例：`{"series":"21000","size":"2","characteristic":"equal-percentage","flowDirection":"FTO","trimFamily":"contoured"}`。字段精确匹配，未知配置不补造；详情用`curve <ID>`，全系列曲线目录用`capacity-directory`。默认摘要仅列少量候选，完整结果在evidencePath，交付完整清单必须读取完整结果。

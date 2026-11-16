@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { checkCandidate } from './check-candidate.mjs';
 
-const fixture = JSON.parse(readFileSync(new URL('./fixtures/candidate.json', import.meta.url), 'utf8'));
+const fixture = JSON.parse(readFileSync(new URL('../fixtures/candidate.json', import.meta.url), 'utf8'));
 const sample = () => structuredClone(fixture);
 test('样本结构改动可在CV不变时初筛，但不能省略结构依据或改变阀体口径', () => {
   const x=sample();x.direction='structure';x.candidate.bodyNominalMm=x.baseline.bodyNominalMm;x.candidate.ratedCv=x.baseline.ratedCv;

@@ -4,7 +4,7 @@
 
 ## 现有能力与边界
 
-本项目从仓库根执行 `node tools/valvstream/pre-sizing-cli.mjs`；云端从 Skill 根执行 `node runtime/tools/valvstream/pre-sizing-cli.mjs`。都先读已有说明：项目 `docs/local-presizing.md`，云端 `runtime/docs/local-presizing.md`。不重写 Cv 引擎，不用另一套简化公式替换已有实现。
+本项目从仓库根执行 `node tools/valvstream/pre-sizing-cli.mjs`；云端从 Skill 根执行 `node runtime/pre-sizing-cli.mjs`。都先读已有说明：项目 `docs/local-presizing.md`，云端 `references/runtime.md`。不重写 Cv 引擎，不用另一套简化公式替换已有实现。
 
 ```
 node <上述入口> inventory
@@ -98,11 +98,11 @@ node <上述入口> calculate <已核对输入.json> --out-dir <任务结果目�
 
 ```
 node scripts/check-candidate.mjs <候选.json>
-node scripts/check-candidate.mjs scripts/fixtures/candidate.json
+node scripts/check-candidate.mjs fixtures/candidate.json
 node --test scripts/check-candidate.test.mjs
 ```
 
-第二条是包内可直接运行的[合成输入](../scripts/fixtures/candidate.json)，其数值、限值及证据名称只供测试，禁止当作客户数据或默认要求。检查器不代算Cv，不读取证据文件来核实真实性；应将实际计算结果及来源填入输入，保留原始输入与输出。它仅检查提交的声明和数值，不签发业务Gate，不批准页面动作，也不选择试选优先级。
+第二条是包内可直接运行的[合成输入](../fixtures/candidate.json)，其数值、限值及证据名称只供测试，禁止当作客户数据或默认要求。检查器不代算Cv，不读取证据文件来核实真实性；应将实际计算结果及来源填入输入，保留原始输入与输出。它仅检查提交的声明和数值，不签发业务Gate，不批准页面动作，也不选择试选优先级。
 
 | 字段 | 内容与约束 |
 | --- | --- |

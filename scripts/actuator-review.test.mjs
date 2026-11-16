@@ -74,7 +74,7 @@ test('invalid numbers and overflow are rejected without NaN-as-success',()=>{
  assert.equal(reviewActuator(x).comparisonComplete,false);
 });
 test('candidate checker exposes missing actuator work and rejects only relevant new load failure',()=>{
- const x=JSON.parse(readFileSync(new URL('./fixtures/candidate.json',import.meta.url)));
+ const x=JSON.parse(readFileSync(new URL('../fixtures/candidate.json',import.meta.url)));
  assert.equal(checkCandidate(x).actuatorReview.comparisonComplete,false);
  x.actuatorReview=sample();let r=checkCandidate(x);assert.equal(r.status,'READY_FOR_SOFTWARE_CHECK');
  delete x.actuatorReview.candidateDemand;r=checkCandidate(x);assert.equal(r.status,'NEEDS_DATA');assert.equal(r.rejected.length,0);
@@ -99,7 +99,7 @@ test('conditional old-demand bound gives directional margins without inventing a
 test('failure to cover an upper bound asks for a reduction, not rejection of the new configuration',()=>{
  const x=boundSample(),c=reviewActuator(x).comparisons[0].conditionalBaselineComparison;
  assert.equal(c.close.status,'REDUCTION_REQUIRED');assert.equal(c.close.minimumReductionN,3000);
- const input=JSON.parse(readFileSync(new URL('./fixtures/candidate.json',import.meta.url)));
+ const input=JSON.parse(readFileSync(new URL('../fixtures/candidate.json',import.meta.url)));
  input.actuatorReview=x;const r=checkCandidate(input);
  assert.equal(r.status,'NEEDS_DATA');assert.equal(r.rejected.length,0);
 });

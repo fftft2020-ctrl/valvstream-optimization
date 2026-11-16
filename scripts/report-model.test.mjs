@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {reportFixture} from './fixtures/report.mjs';
+import {reportFixture} from '../fixtures/report.mjs';
 import {buildReportModel,reportStrategies} from './report-model.mjs';
 const strategies=await reportStrategies();
 test('三种改动只显示受影响内容，采用计算记录并保留原单位和全部工况',async()=>{

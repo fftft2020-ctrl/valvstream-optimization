@@ -10,7 +10,9 @@ import { screenActuators, actuatorCombinationInsufficient } from './actuator-scr
 import { selectSchemes } from './select-schemes.mjs';
 
 const skill = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const root = existsSync(resolve(skill, 'runtime')) ? resolve(skill, 'runtime') : resolve(skill, '../../..');
+const packaged = existsSync(resolve(skill, 'runtime/pre-sizing.mjs'));
+const engine = packaged ? resolve(skill, 'runtime/pre-sizing.mjs') : resolve(skill, '../../../tools/valvstream/pre-sizing.mjs');
+const capacityDirectory = packaged ? resolve(skill, 'capacity') : resolve(skill, '../valvstream-selection/data/capacity');
 const sha = x => createHash('sha256').update(x).digest('hex');
 const text = x => typeof x === 'string' && !!x.trim();
 function unique(items, key, label) {
@@ -26,8 +28,8 @@ async function sourceHashes() {
 }
 async function capacity(valve) {
   if (!valve.capacityInput) return null;
-  const { calculatePreSizing } = await import(pathToFileURL(resolve(root, 'tools/valvstream/pre-sizing.mjs')));
-  const directory = resolve(root, '.agents/skills/valvstream-selection/data/capacity');
+  const { calculatePreSizing } = await import(pathToFileURL(engine));
+  const directory = capacityDirectory;
   const index = JSON.parse(await readFile(resolve(directory, 'index.json'), 'utf8'));
   const packages = [], hashes = {};
   for (const [series, meta] of Object.entries(index.series)) {
@@ -41,7 +43,7 @@ async function capacity(valve) {
   const actual = result.normalized.cases.map(c => ({name:c.name,massFlowKgH:c.massFlowKgH}));
   if (!isDeepStrictEqual(actual, valve.sourceCases.map(c => ({name:c.name,massFlowKgH:c.massFlowKgH}))))
     throw new Error(`${valve.id}：容量计算工况与本台源工况不一致`);
-  return { result, hashes, engineSha256:sha(await readFile(resolve(root, 'tools/valvstream/pre-sizing.mjs'))) };
+  return { result, hashes, engineSha256:sha(await readFile(engine)) };
 }
 function candidateInput(valve, candidate, calculated) {
   const input = structuredClone(candidate.check || {});

@@ -7,8 +7,8 @@
 从本Skill目录运行（Node.js 22+）：
 
 ```bash
-node scripts/run-review.mjs scripts/fixtures/batch.json /tmp/synthetic-review.json
-node scripts/run-review.mjs scripts/fixtures/batch.json /tmp/synthetic-review.json --verify
+node scripts/run-review.mjs fixtures/batch.json /tmp/synthetic-review.json
+node scripts/run-review.mjs fixtures/batch.json /tmp/synthetic-review.json --verify
 ```
 
 示例是合成数据，不能套用其气源、系数或需求。实际任务另存输入；输出文件已存在时拒绝覆盖。修改计算输入或程序后另用结果文件名。`--verify`比较所有数值、采用方案和计算指纹；只有SKILL文字指纹变化时返回ruleVersionChanged/ruleReviewRequired，提示复读规则，不能据此声称新工程规则已应用。旧schemaVersion=1结果使用其冻结包重算核对；仅排版直接沿用旧结果，不为展示生成新计算文件。

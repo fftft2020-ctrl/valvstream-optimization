@@ -7,7 +7,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { getReviewRecord } from './review-result.mjs';
 import { runReview, verifyReviewResults } from './run-review.mjs';
-const fixture=JSON.parse(await readFile(new URL('./fixtures/batch.json',import.meta.url),'utf8'));
+const fixture=JSON.parse(await readFile(new URL('../fixtures/batch.json',import.meta.url),'utf8'));
 const fresh=()=>structuredClone(fixture);
 test('统一入口覆盖备查短行程，且备查不升级主展示',async()=>{
  const x=fresh(),before=JSON.stringify(x),r=await runReview(x);
@@ -49,13 +49,13 @@ test('没有候选仍保留位号及原因，不能冒称已经完成枚举',asy
 });
 test('容量引擎实际调用，忽略外填Cv/开度且不遗漏源工况',async()=>{
  const here=new URL('../',import.meta.url);
- const paths=[new URL('runtime/tools/valvstream/fixtures/synthetic/pre-sizing-gas.json',here),new URL('../../../tools/valvstream/fixtures/synthetic/pre-sizing-gas.json',here)];
+ const paths=[new URL('fixtures/pre-sizing-gas.json',here),new URL('../../../tools/valvstream/fixtures/synthetic/pre-sizing-gas.json',here)];
  let gas;for(const path of paths){try{gas=JSON.parse(await readFile(path,'utf8'));break;}catch{}}
  assert(gas);
  const x=fresh(),v=x.valves[0];v.capacityInput=gas;
  v.sourceCases=gas.sizing.cases.map(c=>({name:c.name,massFlowKgH:c.flow*c.properties.densityKgM3}));
- const {calculatePreSizing}=await import(new URL((await import('node:fs')).existsSync(new URL('runtime',here))?'runtime/tools/valvstream/pre-sizing.mjs':'../../../tools/valvstream/pre-sizing.mjs',here));
- const dataPaths=[new URL('runtime/.agents/skills/valvstream-selection/data/capacity/21000.json',here),new URL('../valvstream-selection/data/capacity/21000.json',here)];
+ const {calculatePreSizing}=await import(new URL((await import('node:fs')).existsSync(new URL('runtime/pre-sizing.mjs',here))?'runtime/pre-sizing.mjs':'../../../tools/valvstream/pre-sizing.mjs',here));
+ const dataPaths=[new URL('capacity/21000.json',here),new URL('../valvstream-selection/data/capacity/21000.json',here)];
  let pkg;for(const path of dataPaths){try{pkg=JSON.parse(await readFile(path,'utf8'));break;}catch{}}
  const curve=calculatePreSizing(gas,[pkg]).candidates.find(c=>c.scenarios.some(s=>s.cases.every(p=>p.status==='ESTIMATED'))&&/^\d+(\.\d+)?$/.test(c.travel));assert(curve);
  v.candidates=[v.candidates[0]];const c=v.candidates[0];c.curveId=curve.id;delete c.actuation.travelIn;

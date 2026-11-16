@@ -2,7 +2,7 @@
 name: valvstream-optimization
 description: 利用原始选型文件、厂家资料和已有计算工具做离线阀门优化，联合核算容量、开度、几何、流速、噪声及执行机构负荷，交付有依据的改进方向和逐台对比。
 metadata:
-  version: "0.4.63"
+  version: "0.4.64"
 ---
 
 # 阀门选型优化

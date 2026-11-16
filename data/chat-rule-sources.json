@@ -1,15 +1,15 @@
 {
-  "review": "v0.4.63：规则全部备选尺寸逐项匹配；区分不适用、待补资料、已评估未采用和已形成方案；规则14及历史统计口径与聊天版同源复核；用户明确授权独立仓库公开。",
+  "review": "v0.4.64：仅适配Upload skill三层目录限制，修正程序、示例和参考路径；优化规则、公式、厂家数值与聊天执行规则未变。",
   "sources": {
-    "SKILL.md": "64d3b9915b8d6a238f26d14cf4392d5a0d1e7cb50dc8909cf78a0e35c6b15281",
-    "references/chat-attachment.md": "b285b2205cfcbae423a975894f78daa425f12cd331c4fd22f6268861435cfcf0",
-    "references/optimization-map.md": "fde78724386e07ae88b94bc2c415f15dff1a534d661c1ab77b21cb2149094f57",
+    "SKILL.md": "13835cc6302a7ad55b1b2b9954b2957f9174270539034139e3c6989ab11c8933",
+    "references/chat-attachment.md": "ac84fcd8b5941a04a62a3497f29e373633b1ce26b1cbab37f8ded45ccae2942e",
+    "references/optimization-map.md": "5ed5411850f3662d48566bdc6ebcff2f08504fc6dc6c97174c5780ba11aa4c40",
     "references/cost-reduction.md": "381d55a3d2bd06d587eb68e2867ad9abc8912eb0db1642e5702101ad2ff2cdf0",
     "references/offline-prescreen.md": "0431b6da1d3c05acb9c157d6c1811f9c81fdc1d74deac44c7fb42f1a57608712",
-    "references/calculation.md": "903653d1357e7a2c6f9d86a80ab7894b97ad0016e24a3bf3ffed1b5508289958",
+    "references/calculation.md": "588972971d708f5400094b3c650a3dbe10d83c15fd72cbba83ea616779f76a9a",
     "references/actuator-force-followup.md": "c5b1399a8cf056691f2335008b3e1368e0afd14832c6a101d2c508393889fe3d",
     "references/getting-started.md": "5dcd9f651808f5099e1d0be5f885fa5a533c8630d7761f7a44ebe8b57344868b",
-    "references/excel-format.md": "90b1a7cac9f0026941c466cef241d63ce53eb3ebcb6f6fead31f6ab3165c07dd",
+    "references/excel-format.md": "4fb523cca4c9430cfd5c6a4e0c68c1d6df8918c6a268b56f7443a680747abef7",
     "references/bonnet-temperature.md": "1cd7fc9cb888d091cb02710a0458a5f679a4547d866d6fe323df061875b1b97c",
     "references/asymmetric-review.md": "baf96b1fb4ce3904740bcb260ba1c754d2bb29b5cac5c179ab12a21e1b8affa9"
   }

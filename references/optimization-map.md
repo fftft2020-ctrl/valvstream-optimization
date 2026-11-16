@@ -70,4 +70,4 @@
 | [actuator-force-followup.md](actuator-force-followup.md) | Excel/PDF推力来源、执行机构端点预选和后续真实验证 |
 | [sync.md](sync.md)、运行说明及scripts/ | 版本、分发、工具与检查 |
 
-参考按需读取；具体客户、位号和本轮限制留在任务记录。项目运行说明为references/runtime.md，分发包为runtime/docs/local-presizing.md。
+参考按需读取；具体客户、位号和本轮限制留在任务记录。运行说明统一见references/runtime.md。

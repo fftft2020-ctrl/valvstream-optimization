@@ -1,7 +1,7 @@
 // Synthetic examples only; no customer configuration, assumption or limit is a default.
 import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-import {runReview} from '../run-review.mjs';
+import {runReview} from '../scripts/run-review.mjs';
 export async function reportFixture() {
   const base=JSON.parse(await readFile(new URL('./batch.json',import.meta.url),'utf8'));
   const capacity=base.valves[0];capacity.candidates=capacity.candidates.slice(0,1);
