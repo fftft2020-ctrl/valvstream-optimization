@@ -1,8 +1,8 @@
 // Display only; engineering calculations and identifiers retain their original values.
 function precision(value, kind) {
   if (typeof value !== 'number' || !Number.isFinite(value)) throw new TypeError('显示数值须为有限数字；缺项与标识符另行保留');
-  const fixed = { force: 0, forceMargin: 0, area: 0, count: 0, opening: 1, percent: 1,
-    length: 1, velocity: 1, flow: 1, temperature: 1, pressure: 3 };
+  const fixed = { force: 1, forceMargin: 0, area: 2, count: 0, opening: 1, percent: 1,
+    length: 2, velocity: 1, flow: 1, temperature: 1, pressure: 3 };
   let digits;
   if (kind === 'cv') digits = Math.abs(value) < 10 ? 2 : 1;
   else if (kind === 'coefficient' || kind === 'density') {

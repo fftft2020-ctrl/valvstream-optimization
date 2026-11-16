@@ -22,14 +22,34 @@ function compare(demand, output) {
     : !included?'INSUFFICIENT':excluded?'MARGIN_WITH_UNKNOWN_FACTOR_BASIS':'FACTOR_BASIS_REQUIRED';
   return {margins,verdict};
 }
+function baselineHeadroom(demand, comparison) {
+  if (!comparison) return null;
+  if (demand.safetyFactorInclusion==='unknown') return {status:'FACTOR_BASIS_REQUIRED'};
+  const included=demand.safetyFactorInclusion==='included';
+  const directions=Object.fromEntries(['open','close'].map(direction=>{
+    const m=comparison.margins[direction];
+    const adoptedDemandN=included?m.includedThresholdN:m.excludedThresholdN;
+    const headroomN=included?m.marginIfIncludedN:m.marginIfExcludedN;
+    const percentage=adoptedDemandN>0?headroomN/adoptedDemandN*100:null;
+    return [direction,{adoptedDemandN,headroomN,headroomPercent:finite(percentage)?percentage:null,
+      minimumReductionN:Math.max(0,-headroomN)}];
+  }));
+  return {status:'BASELINE_REFERENCE_ONLY',directions,
+    limitingDirectionByN:directions.open.headroomN<=directions.close.headroomN?'open':'close',
+    limitingDirectionByPercent:Object.values(directions).every(d=>finite(d.headroomPercent))
+      ?(directions.open.headroomPercent<=directions.close.headroomPercent?'open':'close'):null,
+    basis:'比原需求多出的力；可能的需求增加和未计损失共同占用，不是新需求预测或新方案实际余量'};
+}
 // These are declared directional premises, not a computed new load or verified source.
-function conditionalBaselineComparison(demand, oldComparison, bound, hydraulicChangeN) {
+function conditionalBaselineComparison(demand, oldComparison, bound, hydraulicChangeN, geometryQualified) {
   if (!obj(bound)) return null;
   const checks=['operatingConditions','pressureForces','sealingFriction','flowAndTravel'];
   return Object.fromEntries(['open','close'].map(direction=>{
     const premises=bound[direction];
     if (!['included','excluded'].includes(demand.safetyFactorInclusion))
       return [direction,{status:'FACTOR_BASIS_REQUIRED'}];
+    if (!geometryQualified)
+      return [direction,{status:'GEOMETRY_QUALIFICATION_REQUIRED',reason:'原/候选须分别绑定精确配置目录或实际装配证据；类比、未知、单纯数字和来源文字不能启用原需求上限'}];
     if (!obj(premises)||!checks.every(k=>obj(premises[k])
       &&['verified','assumed','increases'].includes(premises[k].status)&&text(premises[k].basis)))
       return [direction,{status:'PREMISES_REQUIRED'}];
@@ -48,7 +68,7 @@ function conditionalBaselineComparison(demand, oldComparison, bound, hydraulicCh
 }
 export function reviewActuator(input) {
   const missing=[], pending=['输出余量不等于完整合格；仍核对全行程、气路损失、安装、阀杆和动作要求'];
-  const result={comparisonComplete:false,newLoadComplete:false,geometryChecked:false,throatAreaChangeMm2:null,
+  const result={comparisonComplete:false,newLoadComplete:false,geometryChecked:false,geometryQualified:false,geometryQualification:null,throatAreaChangeMm2:null,
     hydraulicChangeN:null,comparisons:[],missing,pending,liveValidated:false};
   if (!obj(input)) {missing.push('缺执行机构需求、候选能力和改Cv后的负荷检查');return result;}
   const {baselineDemand,candidateDemand,geometry,capacities,loadChanged,minimumSupplyMPa}=input;
@@ -56,6 +76,10 @@ export function reviewActuator(input) {
   if (typeof loadChanged!=='boolean') missing.push('须明确阀门配置是否改变');
   if (!finite(minimumSupplyMPa) || minimumSupplyMPa<=0) missing.push('缺客户最低保证供气MPa表压');
   if (loadChanged) {
+    const qualify=q=>obj(q)&&['exact-catalog','as-built'].includes(q.kind)&&text(q.source)&&text(q.configurationRef);
+    result.geometryQualification={baseline:geometry?.baselineQualification??{kind:'unknown'},candidate:geometry?.candidateQualification??{kind:'unknown'}};
+    result.geometryQualified=!!(qualify(geometry?.baselineQualification)&&qualify(geometry?.candidateQualification));
+    if (!result.geometryQualified) missing.push('原/候选几何缺精确配置绑定：须分别给baselineQualification/candidateQualification的kind、source及configurationRef；inferred/unknown不能启用条件上限');
     if (!obj(geometry) || !['baselineThroatMm','candidateThroatMm'].every(k=>finite(geometry[k])&&geometry[k]>0) || !text(geometry.source)) {
       missing.push('改Cv或结构必须核对原/候选喉径及来源，不能只写行程');
     } else {
@@ -78,7 +102,7 @@ export function reviewActuator(input) {
       }
       pending.push(change===0?'本档目录喉径未变，不能宣称喉径缩小带来减力':'喉径变化已量化；圆面积变化不等于净受压面积或总推力降幅');
     }
-    if (!validDemand(candidateDemand)) missing.push('新总需求未完成；保留已算分量，并评估原需求作为有条件上限；旧负荷不足不等于新方案失败');
+    if (!validDemand(candidateDemand)) missing.push('新总需求未完成；先列比原需求多出的力及百分比，保留已算分量；有据或用户明确假设时另评估条件上限，旧负荷不足不等于新方案失败');
   }
   const newDemand=loadChanged===false ? baselineDemand : candidateDemand;
   result.newLoadComplete=validDemand(newDemand);
@@ -93,11 +117,12 @@ export function reviewActuator(input) {
     const current=result.newLoadComplete?compare(newDemand,output):null;
     if (validDemand(baselineDemand)&&!old || result.newLoadComplete&&!current) missing.push('需求门槛或余量计算溢出');
     const conditional=loadChanged===true&&!current&&old
-      ?conditionalBaselineComparison(baselineDemand,old,input.baselineBound,result.hydraulicChangeN):null;
+      ?conditionalBaselineComparison(baselineDemand,old,input.baselineBound,result.hydraulicChangeN,result.geometryChecked&&result.geometryQualified):null;
     const hasConditional=conditional&&Object.values(conditional).some(c=>finite(c.marginN));
     result.comparisons.push({model:output.model,availableOpenN:output.openN,availableCloseN:output.closeN,
       supplyMPa:output.supplyMPa,outputBasis:output.outputBasis,source:output.source,
       baselineDemandComparison:old,candidateDemandComparison:current,conditionalBaselineComparison:conditional,
+      baselineReferenceHeadroom:baselineHeadroom(baselineDemand,old),
       candidateVerdict:current?.verdict??(hasConditional?'CONDITIONAL_BASELINE_COMPARISON':'NEW_LOAD_NOT_CALCULATED')});
   }
   result.comparisonComplete=validDemand(baselineDemand)&&result.comparisons.length>0

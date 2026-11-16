@@ -1,13 +1,58 @@
 {
   "direction": "body",
-  "pipeNominalMm": {"inlet": 100, "outlet": 100},
-  "baseline": {"bodyNominalMm": 80, "ratedCv": 65, "packing": {"material": "PTFE", "features": ["original"]}},
-  "candidate": {"bodyNominalMm": 50, "ratedCv": 46, "packing": {"material": "PTFE", "features": ["original"]}},
-  "calculationBasis": {"type": "independent", "description": "Synthetic test only; not customer data or a verified valve selection"},
-  "evidence": ["synthetic-independent-result.json"],
-  "sourceCases": [{"name": "Max", "massFlowKgH": 36000}],
-  "cases": [{"name": "Max", "requiredCv": 25, "estimatedTravelPercent": 75, "massFlowKgH": 36000,
-    "outletDensityKgM3": 1000, "outletDensityBasis": "verified", "outletDiameterMm": 50,
-    "outletAreaBasis": "actual", "velocityLimitMps": 10, "noiseDbA": null,
-    "noiseLimitDbA": 85, "noiseLimitRelation": "<="}]
+  "pipeNominalMm": {
+    "inlet": 100,
+    "outlet": 100
+  },
+  "baseline": {
+    "bodyNominalMm": 80,
+    "ratedCv": 65,
+    "packing": {
+      "material": "PTFE",
+      "features": [
+        "original"
+      ]
+    }
+  },
+  "candidate": {
+    "bodyNominalMm": 50,
+    "ratedCv": 46,
+    "packing": {
+      "material": "PTFE",
+      "features": [
+        "original"
+      ]
+    }
+  },
+  "calculationBasis": {
+    "type": "independent",
+    "description": "Synthetic test only; not customer data or a verified valve selection"
+  },
+  "evidence": [
+    "synthetic-independent-result.json"
+  ],
+  "sourceCases": [
+    {
+      "name": "Max",
+      "massFlowKgH": 36000
+    }
+  ],
+  "cases": [
+    {
+      "name": "Max",
+      "requiredCv": 25,
+      "estimatedTravelPercent": 75,
+      "massFlowKgH": 36000,
+      "outletDensityKgM3": 1000,
+      "outletDensityBasis": "verified",
+      "outletDiameterMm": 50,
+      "outletAreaBasis": "actual",
+      "velocityLimitMps": 10,
+      "noiseDbA": null,
+      "noiseLimitDbA": 85,
+      "noiseLimitRelation": "<=",
+      "velocityLimitType": "reference",
+      "velocityLimitSource": "合成回归参考值，非客户限值"
+    }
+  ]
 }

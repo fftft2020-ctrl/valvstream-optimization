@@ -3,7 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { readFile, mkdir, writeFile, link, unlink } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { calculatePreSizing, screenHistoricalCandidates, matchHistoricalFilter, PreSizingError } from "./pre-sizing.mjs";
+import { calculatePreSizing, screenHistoricalCandidates, matchHistoricalFilter, catalogSizeMatches, PreSizingError } from "./pre-sizing.mjs";
 
 const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const DATA = join(ROOT, ".agents/skills/valvstream-selection/data/capacity");
@@ -304,7 +304,7 @@ async function main(argv) {
     const { packages, dropdowns } = await loadCapacityLibrary(query.series);
     for (const k of Object.keys(query)) if (!["series", "size", "rating", "characteristic", "flowDirection", "tableId", "trimFamily"].includes(k)) throw new PreSizingError(`unknown filter: ${k}`);
     const rows = packages.flatMap(p => p.tables.flatMap(t => t.curves.map(c => ({ series: p.series, ...c, review: [...t.review, ...c.review] }))))
-      .filter(c => Object.entries(query).every(([k, v]) => c[k] === v))
+      .filter(c => Object.entries(query).every(([k, v]) => k === "size" ? catalogSizeMatches(c.size, v) : c[k] === v))
       .map(({ id, series, size, rating, characteristic, flowDirection, trimFamily, ratedCv, review }) => ({ id, series, size, rating, characteristic, flowDirection, trimFamily, ratedCv, review }));
     return { count: rows.length, rows: rows.slice(0, 20), truncated: rows.length > 20,
       dropdowns:dropdowns.filter(g=>Object.entries(query).every(([k,v])=>g.configuration[k]===v)),

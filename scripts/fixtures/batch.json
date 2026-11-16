@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "valves": [
+    {
+      "id": "SYNTHETIC-1",
+      "source": "合成回归样本；不得用于实际供货",
+      "sourceCases": [
+        {
+          "name": "Max",
+          "massFlowKgH": 36000
+        }
+      ],
+      "baseline": {
+        "bodyNominalMm": 80,
+        "ratedCv": 65,
+        "packing": {
+          "material": "PTFE",
+          "features": [
+            "original"
+          ]
+        }
+      },
+      "pipeNominalMm": {
+        "inlet": 100,
+        "outlet": 100
+      },
+      "actuator": {
+        "minimumSupplyMPa": 0.4,
+        "positioner": {
+          "model": "SVI II AP",
+          "circuit": "standard"
+        },
+        "baselineDemand": {
+          "openN": 1000,
+          "closeN": 2000,
+          "safetyFactor": 1.2,
+          "safetyFactorInclusion": "included",
+          "source": "合成需求，非客户选型"
+        },
+        "original": {
+          "type": "88",
+          "size": 23,
+          "travelIn": 2.5,
+          "spring": [
+            21,
+            45
+          ]
+        }
+      },
+      "candidates": [
+        {
+          "id": "body-short",
+          "kind": "capacity",
+          "route": "缩阀体",
+          "upstreamPriority": "有条件候选",
+          "decisionBasis": "合成测试：检查全部候选后再决定展示",
+          "check": {
+            "direction": "body",
+            "candidate": {
+              "bodyNominalMm": 50,
+              "ratedCv": 46,
+              "packing": {
+                "material": "PTFE",
+                "features": [
+                  "original"
+                ]
+              }
+            },
+            "calculationBasis": {
+              "type": "independent",
+              "description": "Synthetic test only; not customer data or a verified valve selection"
+            },
+            "evidence": [
+              "synthetic-independent-result.json"
+            ],
+            "cases": [
+              {
+                "name": "Max",
+                "requiredCv": 25,
+                "estimatedTravelPercent": 75,
+                "massFlowKgH": 36000,
+                "outletDensityKgM3": 1000,
+                "outletDensityBasis": "verified",
+                "outletDiameterMm": 50,
+                "outletAreaBasis": "actual",
+                "velocityLimitMps": 10,
+                "noiseDbA": null,
+                "noiseLimitDbA": 85,
+                "noiseLimitRelation": "<=",
+                "velocityLimitType": "reference",
+                "velocityLimitSource": "合成回归参考值，非客户限值"
+              }
+            ]
+          },
+          "actuation": {
+            "travelIn": 2,
+            "loadChanged": true,
+            "geometry": {
+              "baselineQualification": {
+                "kind": "unknown"
+              },
+              "candidateQualification": {
+                "kind": "unknown"
+              }
+            }
+          }
+        },
+        {
+          "id": "archive-short",
+          "kind": "capacity",
+          "route": "缩阀体",
+          "upstreamPriority": "备查",
+          "decisionBasis": "合成测试：检查全部候选后再决定展示",
+          "check": {
+            "direction": "body",
+            "candidate": {
+              "bodyNominalMm": 50,
+              "ratedCv": 46,
+              "packing": {
+                "material": "PTFE",
+                "features": [
+                  "original"
+                ]
+              }
+            },
+            "calculationBasis": {
+              "type": "independent",
+              "description": "Synthetic test only; not customer data or a verified valve selection"
+            },
+            "evidence": [
+              "synthetic-independent-result.json"
+            ],
+            "cases": [
+              {
+                "name": "Max",
+                "requiredCv": 25,
+                "estimatedTravelPercent": 75,
+                "massFlowKgH": 36000,
+                "outletDensityKgM3": 1000,
+                "outletDensityBasis": "verified",
+                "outletDiameterMm": 50,
+                "outletAreaBasis": "actual",
+                "velocityLimitMps": 10,
+                "noiseDbA": null,
+                "noiseLimitDbA": 85,
+                "noiseLimitRelation": "<=",
+                "velocityLimitType": "reference",
+                "velocityLimitSource": "合成回归参考值，非客户限值"
+              }
+            ]
+          },
+          "actuation": {
+            "travelIn": 1.5,
+            "loadChanged": true,
+            "geometry": {
+              "baselineQualification": {
+                "kind": "unknown"
+              },
+              "candidateQualification": {
+                "kind": "unknown"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

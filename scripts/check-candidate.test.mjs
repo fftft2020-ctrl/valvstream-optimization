@@ -5,6 +5,13 @@ import { checkCandidate } from './check-candidate.mjs';
 
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/candidate.json', import.meta.url), 'utf8'));
 const sample = () => structuredClone(fixture);
+test('样本结构改动可在CV不变时初筛，但不能省略结构依据或改变阀体口径', () => {
+  const x=sample();x.direction='structure';x.candidate.bodyNominalMm=x.baseline.bodyNominalMm;x.candidate.ratedCv=x.baseline.ratedCv;
+  assert.equal(checkCandidate(x).status,'REJECTED');
+  x.structuralChange='厂家样本特殊阀体配较小内件、阀盖和螺栓，见适用表行';
+  assert.equal(checkCandidate(x).status,'READY_FOR_SOFTWARE_CHECK');
+  x.candidate.bodyNominalMm=40;assert.equal(checkCandidate(x).status,'REJECTED');
+});
 test('half-pipe is inclusive; DN40 on DN100 is rejected before recommendation', () => {
   const x = sample(); assert.equal(checkCandidate(x).status, 'READY_FOR_SOFTWARE_CHECK');
   x.candidate.bodyNominalMm = 40; assert.equal(checkCandidate(x).status, 'REJECTED');

@@ -213,7 +213,7 @@ export function screenCandidates(normalized, packages) {
   const candidates = [], found = new Set();
   for (const pkg of packages) for (const table of pkg.tables) for (const curve of table.curves) {
     if (normalized.curveIds && !normalized.curveIds.includes(curve.id)) continue;
-    if (Object.entries(filter).some(([k, v]) => (k === "series" ? pkg.series : curve[k]) !== v)) continue;
+    if (Object.entries(filter).some(([k, v]) => (k === "size" ? !catalogSizeMatches(curve.size, v) : (k === "series" ? pkg.series : curve[k]) !== v))) continue;
     found.add(curve.id);
     const review = [...table.review, ...curve.review];
     if (curve.flowDirection === "see-table-context") review.push("表中流向取决于具体型号或未唯一说明，须核对后配置");
@@ -299,4 +299,27 @@ export function screenHistoricalCandidates(normalized, records) {
       || Math.abs((a.capacityRatio ?? 1)-1)-Math.abs((b.capacityRatio ?? 1)-1)
       || a.unresolvedFilterFields.length-b.unresolvedFilterFields.length || a.id.localeCompare(b.id);
   });
+}
+
+/** Split size alternatives only. Their physical meaning still comes from the table footnote. */
+export function catalogSizeOptions(raw) {
+  if (typeof raw !== 'string' || !raw.trim()) throw new TypeError('缺少样本尺寸原文');
+  const tokens = raw.replace(/\(\d+\)/g, '').replace(/[×X]/g, 'x').split(/\s+/).filter(Boolean);
+  const options = [];
+  for (const token of tokens) {
+    if (['FTO', 'FTC'].includes(token)) continue;
+    if (!/^\d+(?:\.\d+)?(?:x\d+(?:\.\d+)?){0,2}$/.test(token)) throw new Error('未识别样本尺寸：' + token);
+    const dimensionsIn = token.split('x').map(Number);
+    if (dimensionsIn.some(n => n <= 0)) throw new Error('样本尺寸须大于0');
+    if (!options.some(o => o.token === token)) options.push({token, dimensionsIn});
+  }
+  if (!options.length) throw new Error('未找到样本尺寸');
+  return options;
+}
+
+export function catalogSizeMatches(raw, wanted) {
+  if (raw === wanted) return true;
+  if (typeof wanted !== 'string') return false;
+  try { return catalogSizeOptions(raw).some(option => option.token === wanted.replace(/[×X]/g, 'x')); }
+  catch { return false; } // Unrecognized catalogue labels still support exact matching above.
 }

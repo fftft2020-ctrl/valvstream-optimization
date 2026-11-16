@@ -4,7 +4,7 @@ import {displayNumber as f, numberFormat, auditVisibleText} from './presentation
 
 test('same physical quantity has one display policy, without changing raw values', () => {
   const raw = [306.037647, 1306.88751, 29560.548];
-  assert.deepEqual(raw.map(x => f(x, 'force')), ['306', '1,307', '29,561']);
+  assert.deepEqual(raw.map(x => f(x, 'force')), ['306', '1,306.9', '29,560.5']);
   assert.equal(raw[0], 306.037647);
   assert.equal(f(4.7, 'pressure'), '4.7');
   assert.equal(f(400, 'temperature'), '400');
@@ -12,7 +12,7 @@ test('same physical quantity has one display policy, without changing raw values
   assert.equal(f(1.93786, 'cv'), '1.94');
   assert.equal(f(83.5689, 'opening'), '83.6');
   assert.equal(f(12.300000000000002, 'pressure'), '12.3');
-  assert.equal(numberFormat(1306.88751, 'force'), '#,##0');
+  assert.equal(numberFormat(1306.88751, 'force'), '#,##0.0');
   assert.equal(numberFormat(4.7, 'pressure'), '0.0');
   assert.equal(numberFormat(400, 'temperature'), '0');
 });

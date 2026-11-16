@@ -17,14 +17,15 @@ function compareNoise(value, relation, limit, limitRelation) {
 
 // Bounded engineering checks only; source truth, model applicability and trial value require separate review.
 export function checkCandidate(input) {
-  const rejected = [], missing = [], deviations = [], pending = [
+  const rejected = [], missing = [], deviations = [], displayHolds = [], pending = [
     '软件核验实际候选、完整执行机构负荷、附件与动作时间；本结果不等于选型通过',
     '本地引擎未实现完整异径管修正、黏度修正及气蚀损伤模型',
     '逐路线比较收益、原噪声、速度增量、开度和余量后再安排试选；检查状态不决定优先级'
   ];
   if (!object(input)) throw new TypeError('candidate input must be an object');
   const { direction, baseline = {}, candidate = {}, pipeNominalMm = {}, calculationBasis } = input;
-  if (!['body', 'cv'].includes(direction)) rejected.push('本检查器仅支持 body / cv 两条基础路线；特殊方案须单独工程评估');
+  if (!['body', 'cv', 'structure'].includes(direction)) rejected.push('本检查器仅支持 body / cv / structure 容量初筛；特殊方案须单独工程评估');
+  if (direction === 'structure' && !text(input.structuralChange)) rejected.push('结构路线须说明有来源的实际结构改动，不能把纯CV变化冒充结构降本');
   for (const side of ['inlet', 'outlet']) {
     if (!number(pipeNominalMm?.[side])) missing.push(`缺少有效的 ${side} 管道公称口径`);
     else if (number(candidate?.bodyNominalMm) && candidate.bodyNominalMm < pipeNominalMm[side] / 2)
@@ -36,6 +37,7 @@ export function checkCandidate(input) {
   }
   if (object(baseline?.packing) && object(candidate?.packing) && !isDeepStrictEqual(baseline.packing, candidate.packing)) rejected.push('候选改变了原填料配置');
   if (number(baseline?.bodyNominalMm) && number(candidate?.bodyNominalMm)) {
+    if (direction === 'structure' && candidate.bodyNominalMm !== baseline.bodyNominalMm) rejected.push('structure 路线保持所核阀体公称口径；异径主体变化须单列尺寸依据');
     if (direction === 'body' && candidate.bodyNominalMm >= baseline.bodyNominalMm) rejected.push('body 路线必须缩小阀体');
     if (direction === 'cv' && candidate.bodyNominalMm !== baseline.bodyNominalMm) rejected.push('cv 路线必须保持阀体口径');
   }
@@ -90,10 +92,31 @@ export function checkCandidate(input) {
         if (!text(c.velocityAssumptions)) missing.push(`${c.name}：流速粗估须说明面积/密度假设`);
       }
     } else missing.push(`${c.name}：缺少有效质量流量、出口密度或实际出口直径`);
-    if (c.velocityLimitMps != null && !number(c.velocityLimitMps)) missing.push(`${c.name}：流速限值无效`);
-    else if (number(c.velocityLimitMps)) {
-      if (velocityMps !== null && velocityMps > c.velocityLimitMps) deviations.push(`${c.name}：出口流速 ${velocityMps.toFixed(3)} m/s 超过 ${c.velocityLimitMps} m/s，不能当作合格`);
-      if (roughVelocityMps !== null && roughVelocityMps > c.velocityLimitMps) pending.push(`${c.name}：流速粗估高于给定限值，须实际流道与物性核验；不作正式验收`);
+    let velocityAssessment = 'NO_LIMIT';
+    if (c.velocityLimitMps != null && !number(c.velocityLimitMps)) {
+      missing.push(`${c.name}：流速限值无效`); displayHolds.push(`${c.name}：先核对流速限值`);
+    } else if (number(c.velocityLimitMps)) {
+      const type = c.velocityLimitType;
+      const classified = ['reference', 'hard'].includes(type) && text(c.velocityLimitSource);
+      if (!classified) missing.push(`${c.name}：流速限值须区分reference/hard并注明来源，旧字段不自动视为参考值`);
+      const acceptance = c.velocityDeviationAcceptance;
+      const accepted = object(acceptance) && text(acceptance.source) && number(acceptance.limitMps) && acceptance.limitMps >= c.velocityLimitMps;
+      if (acceptance != null && !accepted) { missing.push(`${c.name}：流速偏差接受须有来源及不低于原限值的批准上限`); displayHolds.push(`${c.name}：先核对流速偏差接受依据`); }
+      if (velocityMps !== null && velocityMps > c.velocityLimitMps) {
+        const message = `${c.name}：出口流速 ${velocityMps.toFixed(3)} m/s 超过 ${c.velocityLimitMps} m/s`;
+        if (!classified) {
+          velocityAssessment = 'LIMIT_TYPE_REQUIRED'; displayHolds.push(message + '；限值性质或来源未确定，暂不列主表');
+        } else if (type === 'hard' && !(accepted && velocityMps <= acceptance.limitMps)) {
+          velocityAssessment = 'HARD_EXCEEDED'; rejected.push(message + '；超过明确硬限值且无覆盖本值的偏差接受');
+        } else {
+          velocityAssessment = type === 'hard' ? 'ACCEPTED_DEVIATION' : 'REFERENCE_EXCEEDED';
+          deviations.push(message + (type === 'hard' ? `；按所附依据接受至 ${acceptance.limitMps} m/s` : '；仅超初筛参考，须说明取舍，不等于正式合格'));
+        }
+      } else if (velocityMps !== null) velocityAssessment = 'WITHIN_GIVEN_LIMIT';
+      if (roughVelocityMps !== null && roughVelocityMps > c.velocityLimitMps) {
+        pending.push(`${c.name}：流速粗估高于给定限值，须实际流道与物性核验；不作正式验收`);
+        if (!classified || type === 'hard') displayHolds.push(`${c.name}：粗估超过硬限值或未分类限值，先补实际流速依据`);
+      }
     }
     let newNoiseDbA = null, noiseDifferenceDb = null, noiseAssessment = 'NOT_PREDICTED';
     const limitValid = number(c.noiseLimitDbA, true) && ['<', '<='].includes(c.noiseLimitRelation);
@@ -111,7 +134,7 @@ export function checkCandidate(input) {
       }
     }
     if (newNoiseDbA === null && !stopped) pending.push(`${c.name}：候选新噪声未可靠计算，原报告噪声只作基准`);
-    rows.push({ name: c.name, velocityMps, roughVelocityMps, noiseAssessment, newNoiseDbA,
+    rows.push({ name: c.name, velocityMps, roughVelocityMps, velocityAssessment, noiseAssessment, newNoiseDbA,
       newNoiseRelation: newNoiseDbA === null ? null : c.noiseRelation, noiseDifferenceDb });
   }
   const omitted = [...source.keys()].filter(name => !names.has(name)), unexpected = [...names].filter(name => !source.has(name));
@@ -151,7 +174,7 @@ export function checkCandidate(input) {
     schemaVersion: 2, actuatorReview, status: rejected.length ? 'REJECTED' : missing.length ? 'NEEDS_DATA' : deviations.length ? 'DEVIATION_REVIEW' : 'READY_FOR_SOFTWARE_CHECK',
     calculationBasis: basisType, coverage, noiseCoverage, velocityCoverage, trialPriority: 'NOT_ASSESSED',
     liveValidated: false, businessGatePass: false,
-    rejected, missing, deviations, pending, cases: rows, hydraulicClosingLowerBoundN
+    rejected, missing, deviations, displayHolds, pending, cases: rows, hydraulicClosingLowerBoundN
   };
 }
 

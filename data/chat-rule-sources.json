@@ -1,14 +1,16 @@
 {
-  "review": "v0.4.38：按用户新指示将独立仓库分发改为私有；工程规则与执行机构参数沿用v0.4.37，精简指南无需增加发布流程。",
+  "review": "v0.4.63：规则全部备选尺寸逐项匹配；区分不适用、待补资料、已评估未采用和已形成方案；规则14及历史统计口径与聊天版同源复核；用户明确授权独立仓库公开。",
   "sources": {
-    "SKILL.md": "dd28d3eeb7c00c7f0dabdd2cceb55fb8b455b71b17eaf3ebfeaf517afa99fecf",
-    "references/chat-attachment.md": "e267cbe2bce5c9cc0fd9251fb6bc56d2bd9ff54260a8ada7446aa3dbafd8aa81",
-    "references/optimization-map.md": "5eea3ae8808beab89cc4119e85c9d69913b7e9bc138f038e7985988214439dbb",
-    "references/cost-reduction.md": "740b9e3a2b1de707c0882fc3d662d26d3a5cf06323e5c34c06de139826af211a",
-    "references/offline-prescreen.md": "ca5496c67f840c28076dd5c46e00df3d239cc7fc2a2c4123618414aafb662e87",
-    "references/calculation.md": "17f42db0bda6b11d96daf7399f543487c25a5c376906bcea24b7be6e7ef9c080",
-    "references/actuator-force-followup.md": "2e0bef9ec07a91bec8b9c20964a8bda9b5b3f8f5cc16497541f7a1c2d8bf6987",
-    "references/getting-started.md": "f3e7e51c5e0a0838f3dddbcdeb553cd125643590475a90d35d5d6667d69c69bb",
-    "references/excel-format.md": "9000e97285345cec04fdfcedc524af8cb4fafddfa14b70fc685611c2d7641071"
+    "SKILL.md": "64d3b9915b8d6a238f26d14cf4392d5a0d1e7cb50dc8909cf78a0e35c6b15281",
+    "references/chat-attachment.md": "b285b2205cfcbae423a975894f78daa425f12cd331c4fd22f6268861435cfcf0",
+    "references/optimization-map.md": "fde78724386e07ae88b94bc2c415f15dff1a534d661c1ab77b21cb2149094f57",
+    "references/cost-reduction.md": "381d55a3d2bd06d587eb68e2867ad9abc8912eb0db1642e5702101ad2ff2cdf0",
+    "references/offline-prescreen.md": "0431b6da1d3c05acb9c157d6c1811f9c81fdc1d74deac44c7fb42f1a57608712",
+    "references/calculation.md": "903653d1357e7a2c6f9d86a80ab7894b97ad0016e24a3bf3ffed1b5508289958",
+    "references/actuator-force-followup.md": "c5b1399a8cf056691f2335008b3e1368e0afd14832c6a101d2c508393889fe3d",
+    "references/getting-started.md": "5dcd9f651808f5099e1d0be5f885fa5a533c8630d7761f7a44ebe8b57344868b",
+    "references/excel-format.md": "90b1a7cac9f0026941c466cef241d63ce53eb3ebcb6f6fead31f6ab3165c07dd",
+    "references/bonnet-temperature.md": "1cd7fc9cb888d091cb02710a0458a5f679a4547d866d6fe323df061875b1b97c",
+    "references/asymmetric-review.md": "baf96b1fb4ce3904740bcb260ba1c754d2bb29b5cac5c179ab12a21e1b8affa9"
   }
 }

@@ -16,7 +16,7 @@ class ChatExportTests(unittest.TestCase):
         for filename, pattern in [('optimization-map.md', r'^\| [1-3]\.\d+ \|.*$'),
                                   ('cost-reduction.md', r'^\| (?:[1-9]|[12]\d|3[0-8]) \|.*$')]:
             source = (HERE.parent / 'references' / filename).read_text()
-            anchor,following = ('methods','cases') if filename=='optimization-map.md' else ('cases','curve-library')
+            anchor,following = ('methods','cases') if filename=='optimization-map.md' else ('cases','bonnet-temperature')
             exported = text.split(f'<a id="{anchor}"></a>',1)[1].split(f'<a id="{following}"></a>',1)[0]
             self.assertEqual(re.findall(pattern, source, re.M), re.findall(pattern, exported, re.M))
         for phrase in ['ΔF液', '新总需求', '最低保证', '噪声', 'Notebook', '可复制的续做消息', '不能因为能解释代码就声称代码已运行']:
@@ -32,15 +32,17 @@ class ChatExportTests(unittest.TestCase):
             self.assertIn(phrase, text)
         self.assertIn('恰好3张可见工作表', text)
         self.assertIn('**优化汇总、计算过程、优化策略**', text)
-        self.assertIn('各工况需求Cv', text)
+        self.assertIn('需求CV：原方案 → 优化方案', text)
         self.assertIn('返回汇总', text)
-        self.assertIn('采用策略', text)
+        self.assertIn('调整方法', text)
+        for phrase in ['原阀尺寸（in）', '第一表固定11列', '异径方案按厂家样本', '同格', '组合改动分别判断独立收益']:
+            self.assertIn(phrase, text)
         self.assertNotRegex(text, r'(?<!执行)机' + '构')
         for phrase in ['策略编号', '本次采用方案', '沿用1.1–3.4', '链接到本表对应行']:
             self.assertIn(phrase, text)
         for old in ['恰好2张', '固定9列', '无第三表']:
             self.assertNotIn(old, text)
-        for phrase in ['先确定批次口径，再进行优化', '不能单独证明不含系数', '原系数→1.0→原系数', '不在正式三表反复铺开']:
+        for phrase in ['先确定批次口径，再进行优化', '不能单独证明不含系数', '本指南不安排线上试验', '不在正式三表反复铺开']:
             self.assertIn(phrase, text)
         for phrase in ['用原执行机构反查', '回溯原选型采用原供气', '两方向再乘k仍在能力内', '不能除以k消除矛盾', '最小档前提未证实', '按有区分力样本的主导结果', '记录双方数量、范围']:
             self.assertIn(phrase, text)
@@ -104,6 +106,29 @@ class ChatExportTests(unittest.TestCase):
                        '| 7 | 36 | 7.25 | 7–24/7–24 | 75 |',
                        '| 9 | 75 | 7.25 | 8–25/7–24 | 75 |']:
             self.assertIn(phrase, section)
+
+    def test_bonnet_temperature_data_survives_standalone_export(self):
+        source = (HERE.parent / 'references/bonnet-temperature.md').read_text()
+        text = module.build(HERE.parent)
+        section = text.split('<a id="bonnet-temperature"></a>', 1)[1].split('<a id="curve-library"></a>', 1)[0]
+        expected = {
+            'B21-01': (-29, 232), 'B21-02': (-46, 427), 'B21-03': (-29, 427),
+            'B21-04': (-46, 427), 'B21-05': (-196, 100), 'B21-06': (-29, 232),
+            'B21-07': (-46, 232), 'B41-01': (-29, 343), 'B41-02': (-73, -29),
+            'B41-03': (343, 566), 'B41-04': (-29, 566), 'B41-05': (-196, -73)}
+        rows = re.findall(r'^\| B(?:21|41)-\d+ \|.*$', section, re.M)
+        self.assertEqual(rows, re.findall(r'^\| B(?:21|41)-\d+ \|.*$', source, re.M))
+        actual = {}
+        for row in rows:
+            cells = [x.strip() for x in row.split('|')[1:-1]]
+            actual[cells[0]] = (int(cells[3]), int(cells[4]))
+        self.assertEqual(actual, expected)
+        for row in re.findall(r'^\| S(?:21|41) \|.*$', source, re.M):
+            self.assertIn(row, section)
+        # Preserve scope and caveats, not just the numerical table.
+        body = re.sub(r'\A# [^\n]+\n', '', source).strip()
+        self.assertIn(body, section)
+        self.assertIn('](#bonnet-temperature)', text)
 
     def test_changed_full_rule_cannot_silently_use_old_compact_workflow(self):
         with tempfile.TemporaryDirectory() as temp:
